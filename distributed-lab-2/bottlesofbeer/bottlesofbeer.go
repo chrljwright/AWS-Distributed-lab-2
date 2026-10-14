@@ -24,6 +24,7 @@ func server(thisPort *string){
 	rpc.Register(&BottleOperations{})
     listener, _ := net.Listen("tcp", ":"+*thisPort)
     defer listener.Close()
+	fmt.Println("Listening on " + *thisPort)
     rpc.Accept(listener)
 }
 
@@ -51,7 +52,8 @@ func main(){
 	if (*bottles != 0){
 		server(thisPort)
 	} else {
-		server(thisPort)
+		go server(thisPort)
+		fmt.Println("Starting process")
 		ops := BottleOperations{}
 		var r int
 		ops.BottlesOfBeers(99, &r)
