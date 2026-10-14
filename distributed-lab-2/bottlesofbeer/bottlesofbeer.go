@@ -29,7 +29,7 @@ func server(thisPort *string){
 
 type BottleOperations struct {}
 
-func BottlesOfBeers(n int){
+func (s BottleOperations) BottlesOfBeers(n int){
 	 time.Sleep(1* time.Second)
 	 fmt.Println(n, "bottles of beer on the wall, ",n," bottles of beer. Take one down, pass it around...")
 	 client, _ := rpc.Dial("tcp", nextAddr)
