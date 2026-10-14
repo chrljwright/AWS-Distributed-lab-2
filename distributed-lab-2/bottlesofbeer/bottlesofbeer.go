@@ -49,7 +49,7 @@ func main(){
 	bottles := flag.Int("n",0, "Bottles of Beer (launches song if not 0)")
 	flag.Parse()
 
-	if (*bottles != 0){
+	if (*bottles == 0){
 		server(thisPort)
 	} else {
 		go server(thisPort)
