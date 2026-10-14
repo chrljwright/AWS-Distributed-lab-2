@@ -29,11 +29,15 @@ func server(thisPort *string){
 
 type BottleOperations struct {}
 
-func (s BottleOperations) BottlesOfBeers(n int){
+func (s *BottleOperations) BottlesOfBeers(n int, reply *int) error {
+       if n <= 0 {
+           return nil
+       }
 	 time.Sleep(1* time.Second)
 	 fmt.Println(n, "bottles of beer on the wall, ",n," bottles of beer. Take one down, pass it around...")
 	 client, _ := rpc.Dial("tcp", nextAddr)
-	 client.Call("BottleOperations.BottlesOfBeers", (n-1), nil)
+	 var r int
+	 return client.Call("BottleOperations.BottlesOfBeers", (n-1),  &r)
 	
 }
 
@@ -48,6 +52,8 @@ func main(){
 		server(thisPort)
 	} else {
 		server(thisPort)
-		BottlesOfBeers(*bottles)
+		ops := BottleOperations{}
+		var r int
+		ops.BottlesOfBeers(99, &r)
 	}
 }
