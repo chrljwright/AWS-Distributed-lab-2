@@ -1,20 +1,53 @@
 package main
 import (
 	"flag"
-//	"net/rpc"
-//	"fmt"
-//	"time"
-//	"net"
+	"net/rpc"
+	"fmt"
+	"time"
+	"net"
 )
+
+ 
+
+
+type Response struct {
+	Message string
+}
+
+type Request struct {
+	Message string
+}
 
 var nextAddr string
 
+func server(thisPort *string){
+	rpc.Register(&BottleOperations{})
+    listener, _ := net.Listen("tcp", ":"+*thisPort)
+    defer listener.Close()
+    rpc.Accept(listener)
+}
+
+type BottleOperations struct {}
+
+func BottlesOfBeers(n int){
+	 time.Sleep(1* time.Second)
+	 fmt.Println(n, "bottles of beer on the wall, ",n," bottles of beer. Take one down, pass it around...")
+	 client, _ := rpc.Dial("tcp", nextAddr)
+	 client.Call("BottleOperations.BottlesOfBeers", (n-1), nil)
+	
+}
 
 func main(){
-//	thisPort := flag.String("this", "8030", "Port for this process to listen on")
+	thisPort := flag.String("this", "8030", "Port for this process to listen on")
 	flag.StringVar(&nextAddr, "next", "localhost:8040", "IP:Port string for next member of the round.")
-//	bottles := flag.Int("n",0, "Bottles of Beer (launches song if not 0)")
+
+	bottles := flag.Int("n",0, "Bottles of Beer (launches song if not 0)")
 	flag.Parse()
-	//TODO: Up to you from here! Remember, you'll need to both listen for
-	//RPC calls and make your own.
+
+	if (*bottles != 0){
+		server(thisPort)
+	} else {
+		server(thisPort)
+		BottlesOfBeers(*bottles)
+	}
 }
